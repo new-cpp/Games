@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <cstdio>
 #include <algorithm>
+#include <cmath>
+#include <iostream>
 
 #define LOG_ERROR() perror( SDL_GetError());
 
@@ -10,7 +12,7 @@ constexpr int  SCREEN_HEIGHT {480};
 constexpr int  SCREEN_WIDTH  {720};
 constexpr const char* TITLE       {"ping pong"};
 constexpr int   WINDOW_POSITION {SDL_WINDOWPOS_UNDEFINED};
-
+constexpr const double PI{ std::acos(-1)};
 
 struct TextureManager
 {
@@ -19,7 +21,7 @@ struct TextureManager
   TextureManager(int x , int y, int w, int h):m_rect{x,y,w,h}{}
 
 
-  SDL_Rect m_rect{};
+  SDL_FRect m_rect{};
 };
 
 struct Entity
@@ -28,32 +30,41 @@ struct Entity
   Entity(int x ,int y,int w ,int h) : m_textureManager(x,y,w,h){}
  // void update(int key_pressed){};
   void render(SDL_Renderer*& t_render);
-  void move_up();
-  void move_down();
-  TextureManager m_textureManager{};
+  void move(bool t_direction, const double& t_angle);
+    TextureManager m_textureManager{};
 
-  enum class Keys: bool
+ /* enum class Drection: Uint8
   {
     UP = 0,
     DOWN = 1
-  };
+  };*/
 };
 
 
 void Entity::render(SDL_Renderer*& t_render)
 {
   SDL_SetRenderDrawColor(t_render,0,0,0,0xff);
-  SDL_RenderFillRect(t_render,&m_textureManager.m_rect);
+  SDL_RenderFillRectF(t_render,&m_textureManager.m_rect);
 }
 
-void Entity::move_up()
-  {
-    std::clamp(m_textureManager.m_rect.y-=4,0,SCREEN_HEIGHT - m_textureManager.m_rect.h);
-  }
 
-void Entity::move_down()
+void Entity::move(bool t_direction,const  double& t_angle)
   {
-    std::clamp(m_textureManager.m_rect.y+=4,0,SCREEN_HEIGHT - m_textureManager.m_rect.h);
+    double distance = 0.1;
+    auto&[x,y,w,h] = m_textureManager.m_rect;
+    switch(t_direction)
+      {
+        case true:/*right*/
+              x = x + cos(t_angle)*distance;
+              y = y + sin(t_angle)*distance;
+             // std::cout<<cos(t_angle)*dist << " "<<sin(t_angle)<<'\n';
+              //std::cout<<x<<" "<<y<<'\n';
+          break;
+        case false:/*left*/
+           x = x - cos(t_angle)*distance;
+           y = y - sin(t_angle)*distance;
+          break;
+      }
   }
 
 struct Game
@@ -120,11 +131,11 @@ void Game::input()
             if(e.key.keysym.sym == SDLK_UP)
               {
                 //move player1
-                m_player2.move_up();
+                m_player2.move(true,-PI/2);
               }
             else if(e.key.keysym.sym == SDLK_DOWN)
               {
-                m_player2.move_down();
+                m_player2.move(true,PI/2);
               }
           }
       }
@@ -135,7 +146,7 @@ void Game::update()
   {
     //m_player1.update();
     //m_player2.update();
-    //m_ball.update();
+    m_ball.move(true,PI/4);
   }
 
 void Game::render()
