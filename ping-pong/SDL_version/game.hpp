@@ -9,7 +9,7 @@ struct Game
 {
 
   void init();
-  void input();
+  void input(float dt);
   void update(float dt);
   void render();
   void close();
@@ -48,9 +48,9 @@ struct Game
   Uint32   m_lastUpdate{};
   float    m_fps{};
 
-  Paddle m_player1{50,SCREEN_HEIGHT/2 - 20,10,40,80};
-  Paddle m_player2{SCREEN_WIDTH - 50,SCREEN_HEIGHT/2 - 20,10,40,4000};
-  Ball m_ball   {SCREEN_WIDTH/2-10,SCREEN_HEIGHT/2, 10,10,80};
+  Paddle m_player1{50,(SCREEN_HEIGHT - PADDELE_HEIGHT)/2, PADDELE_WIDTH,PADDELE_HEIGHT,PADDLE_SPEED};
+  Paddle m_player2{SCREEN_WIDTH - 50,(SCREEN_HEIGHT - PADDELE_HEIGHT)/2,PADDELE_WIDTH,PADDELE_HEIGHT,PADDLE_SPEED};
+  Ball m_ball   {(SCREEN_WIDTH - BALL_WIDTH)/2,(SCREEN_HEIGHT - BALL_HEIGHT)/2, BALL_WIDTH,BALL_HEIGHT,BALL_SPEED};
 };
 
 

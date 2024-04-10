@@ -11,11 +11,12 @@ int main(int argc, char* argv[])
       {
         ++game.m_total_frames;
         {
-          game.input();
+
 
           Uint32 current_time = SDL_GetTicks();
           float dt = (float)(current_time - game.getLastUpdate()) / 1000.0f; //ms
 
+          game.input(dt);
           game.update(dt);
           game.render();
 

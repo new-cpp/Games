@@ -22,9 +22,12 @@ void Game::init()
       m_running = false;
     }
 
+  m_player1.set_type(Entity::TYPE::LEFT_PADDELE);
+  m_player2.set_type(Entity::TYPE::RIGHT_PADDELE);
+  m_ball.set_type(Entity::TYPE::BALL);
 }
 
-void Game::input()
+void Game::input( float dt)
   {
     SDL_Event e;
 
@@ -38,11 +41,14 @@ void Game::input()
           {
             if(e.key.keysym.sym == SDLK_UP)
               {
-                m_player2.set_direction(Entity::Direction::UP);
+                m_player2.set_direction(Vector2D{0,-1});
+                m_player2.move(dt);
+
               }
             else if(e.key.keysym.sym == SDLK_DOWN)
               {
-                m_player2.set_direction(Entity::Direction::DOWN);
+                m_player2.set_direction(Vector2D{0,1});
+                m_player2.move(dt);
               }
 
           }
@@ -54,22 +60,33 @@ void Game::input()
 void Game::update( float dt)
   {
 
-
     if(m_ball.collide(m_player2))
       {
-        m_ball.set_direction(Entity::Direction::Left);
-      }
-    if(m_ball.collide(m_player1))
-       {
-          m_ball.set_direction(Entity::Direction::Right);
-       }
-    //m_ball.collide(wall);
 
+      }
+    else if(m_ball.collide(m_player1))
+      {
+
+      }
+    else if(m_ball.passed_right())
+      {
+        m_player2.score();
+        m_ball.set_direction(Vector2D{-1,0});
+        m_ball.reset_position();
+      }
+    else if(m_ball.passed_left())
+      {
+         m_player1.score();
+         m_ball.set_direction(Vector2D{1,0});
+         m_ball.reset_position();
+      }
+    else if(m_ball.hit_wall())
+      {
+
+      }
 
     m_ball.move(dt);
-    m_player2.move(dt);
-    m_player1.move(dt);
-    m_player2.set_direction(Entity::Direction::NONE);
+    m_player1.set_y(m_ball.get_y()+ m_ball.get_h()/2 - PADDELE_HEIGHT/2 );//ai hhhh!
 
   }
 

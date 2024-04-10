@@ -2,26 +2,25 @@
 #define ENTITY_H_
 
 #include "texture_management.hpp"
-
+#include "vector2d.h"
 #include <iostream>
 #include <tuple>
 struct Entity
 {
 
+   enum class TYPE:short
+  {
+    BALL,
+    LEFT_PADDELE,
+    RIGHT_PADDELE
+  }m_type;
+
+
   Entity() = default;
   Entity(float x ,float y,float w ,float h,Uint32 speed) : m_textureManager(x,y,w,h),
-                                                          m_velocity(speed){}
+                                                          m_speed(speed){}
 
   virtual ~Entity() = default;
-
-  enum class Direction
-  {
-    NONE,
-    UP,
-    DOWN,
-    Right,
-    Left
-  };
 
 
   // services
@@ -33,24 +32,6 @@ struct Entity
     }
 
   virtual void move( float dt ) = 0;
-  bool  collide(const Entity& other)const
-    {
-      auto [x,y,w,h]=std::make_tuple<int,int,int,int>(get_x(), get_y(),get_w(),get_h());
-      auto [ox,oy,ow,oh]=std::make_tuple<int,int,int,int>(other.get_x(),other.get_y(),
-                                        other.get_w(),other.get_h());
-
-
-      //right colliding
-            bool right_collide = (ox >= x && (ox-x) <=w);
-
-      //left colliding
-     bool left_collide = (x == ox + ow);
-
-     //y in between
-     bool same_line = (y>= oy && (y<= oy + oh));
-
-     return same_line && (right_collide || left_collide );
-    }
 
   //getter
   float get_y()const    { return m_textureManager.m_rect.y;}
@@ -59,16 +40,27 @@ struct Entity
   float get_w()const    { return m_textureManager.m_rect.w;}
   float get_x()const    { return m_textureManager.m_rect.x;}
 
-
-  void set_direction(Direction direction)
+  float get_speed()const { return m_speed;}
+  Vector2D& get_direction() { return m_direction;}
+  void  set_direction(const Vector2D& dir)
     {
-      m_direction = direction;
+      m_direction = dir;
+    }
+
+  void set_type(const TYPE type)
+    {
+      m_type = type;
+    }
+
+  void set_y(const float& y)
+    {
+      m_textureManager.m_rect.y = y;
     }
 
   TextureManager m_textureManager{};
-  Direction m_direction{ Direction::NONE};
-  SDL_Point m_previous_position{};
-  Uint32 m_velocity{};
+  Vector2D  m_direction{};
+  float     m_speed{};
+
 
 };
 
