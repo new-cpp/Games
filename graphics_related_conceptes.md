@@ -1,7 +1,7 @@
-#+title: Games Related Conceptes
+##  title: Games Related Conceptes
 
-*FPS*: is the rate at which your system, and in particular, your GPU completes frames.
-*HZ* : cycles per second,the rate at which your display shows those completed frames.
+*FPS* : is the rate at which your system, and in particular, your GPU completes frames.
+*HZ*  : cycles per second,the rate at which your display shows those completed frames.
         60 HZ is 60 times per second.
 
 
@@ -17,3 +17,10 @@
 
 *System Latency*
  describes the time it takes your actions (mouse clicks, mouse movements, keyboard input) to reach your display. This is often called motion to photon, or click to muzzle flash latency.(Cpu + Gpu + Display time to render a frame)
+
+
+*Homogeneous Coordinates* :
+  - watch : https://www.youtube.com/watch?v=o-xwmTODTUI
+
+
+
